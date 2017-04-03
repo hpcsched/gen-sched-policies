@@ -1,3 +1,3 @@
-Source material of the paper Artifact Description: Obtaining Dynamic Scheduling Policies with Simulation and Machine Learning.
+Source material of the paper: Obtaining Dynamic Scheduling Policies with Simulation and Machine Learning.
 
 We provide the source code implementation of all of the strategies proposed in the paper as well as the source code of the simulation experiments used to evaluate our approach so the reader can (i) generate their own distribution score(r,n,s), (ii) reproduce the nonlinear regression to obtain the scheduling policies presented in the paper or generate their own scheduling policies with their own generated distribution, and (iii) reproduce the dynamic scheduling experiments results presented in the paper.
