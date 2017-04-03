@@ -1,0 +1,8 @@
+<?xml version='1.0'?>
+<!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid/simgrid.dtd">
+<platform version="4">
+  <AS  id="AS0"  routing="Cluster">
+    <cluster id="AS_adonis" prefix="node-" suffix=""
+				radical="0-40000" speed="35Gf" core="4" bw="125MBps" lat="100us"/>
+  </AS>
+</platform>

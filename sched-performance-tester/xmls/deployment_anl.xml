@@ -1,0 +1,9 @@
+<?xml version='1.0'?>
+<!DOCTYPE platform SYSTEM "http://simgrid.gforge.inria.fr/simgrid/simgrid.dtd">
+<platform version="4">
+  <!-- The master process (with some arguments) -->
+  <process host="node-0" function="master">     
+     <argument value="40000"/>       <!-- Number of task managers -->
+     <argument value="163840"/>       <!-- Number of nodes -->
+  </process>    
+</platform>
