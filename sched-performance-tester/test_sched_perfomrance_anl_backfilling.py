@@ -31,7 +31,7 @@ tasks_queue_submit = []
 SECONDS_IN_A_DAY = 86400
 
 SIM_NUM_DAYS = 15
-NUM_EXPERIMENTS = 10
+NUM_EXPERIMENTS = 15
 
 slow_sjf = []
 slow_fcfs = []
@@ -161,35 +161,47 @@ all_medians = []
 
 axes = plt.axes()
 
-# plot violin plot
-#plt.violinplot(all_data,
-#                   showmeans=False,
-#                   showmedians=True,points=10)
-#axes[0].set_title('violin plot')
+new_all_data = np.array(all_data)
 
-new_all_data = all_data[:]
+OUT_POLICIES = 4
+MAX_OUT = [1,1,1,2]
 
-outliers = np.zeros((4,2))
+outliers = np.zeros((OUT_POLICIES,max(MAX_OUT)))
 
-for i in range(3,4):
-  _max = max(all_data[i])
-  outliers[i,0] = _max
-  new_all_data[i].remove(_max)
-  #_max = max(all_data[i])
-  #outliers[i,1] = _max
-  #new_all_data[i].remove(_max)
+for i in range(0,OUT_POLICIES):
+  temp = new_all_data[i,:]
+  for j in range(0,MAX_OUT[i]):
+    _max = np.max(temp)
+    outliers[i,j] = _max
+    temp = np.delete(temp,np.argmax(temp))            
 
 xticks=[y+1 for y in range(len(all_data))]
 #print(new_all_data)
-plt.plot(xticks[0:3], new_all_data[0:3], 'o', color='darkorange')
+plt.plot(xticks[0:1], new_all_data[0:1], 'o', color='darkorange')
+plt.plot(xticks[1:2], new_all_data[1:2], 'o', color='darkorange')
+plt.plot(xticks[2:3], new_all_data[2:3], 'o', color='darkorange')
 plt.plot(xticks[3:4], new_all_data[3:4], 'o', color='darkorange')
-plt.plot(xticks[4:8], new_all_data[4:8], 'o', color='darkorange')
+plt.plot(xticks[4:5], new_all_data[4:5], 'o', color='darkorange')
+plt.plot(xticks[5:6], new_all_data[5:6], 'o', color='darkorange')
+plt.plot(xticks[6:7], new_all_data[6:7], 'o', color='darkorange')
+plt.plot(xticks[7:8], new_all_data[7:8], 'o', color='darkorange')
 
-plt.ylim((0,35))
+plt.ylim((0,27))
 
-for i in range(3,4):
-  plt.annotate('%.1f' % (outliers[i,0]), xy=(xticks[i], 35), xytext=(xticks[i]-0.45, 30),
-            arrowprops=dict(facecolor='black', shrink=0.05),fontsize=35)
+xoffset=[0.255,0.255,0.255,0.325]
+ylow=[25,25,25,24]
+
+for i in range(0,OUT_POLICIES):  
+  if i == 3:
+    output = '%.1f' % (outliers[i,0])+'\n'+'%.1f' % (outliers[i,1])
+  else:
+    output = '%.1f' % (outliers[i,0])
+  #  continue
+  #output=''
+  #if i == 3 or i == 1:
+  #  output = '%.1f' % (outliers[i,0])
+  plt.annotate(output, xy=(xticks[i], 27), xytext=(xticks[i]-xoffset[i], ylow[i]),
+            arrowprops=dict(facecolor='black', shrink=0.05),fontsize=25)
 
 for p in all_data:
   all_medians.append(np.median(p))
@@ -202,13 +214,12 @@ plt.boxplot(all_data, showfliers=False)
 #for ax in axes:
 axes.yaxis.grid(True)
 axes.set_xticks([y+1 for y in range(len(all_data))])
-axes.set_xlabel('Scheduling Policies', fontsize=45)
-axes.set_ylabel('Average Bounded Slowdown',  fontsize=45)
+#axes.set_xlabel('Scheduling Policies', fontsize=45)
+#axes.set_ylabel('Average Bounded Slowdown',  fontsize=45)
 
-xticklabels=['FCFS', 'WFP', 'UNI', 'SPT', 'F4', 'F3', 'F2', 'F1']
 # add x-tick labels
-plt.setp(axes, xticks=[y+1 for y in range(len(all_data))],
-         xticklabels=['FCFS', 'WFP', 'UNI', 'SPT', 'F4', 'F3', 'F2', 'F1'])
+xticklabels=['FCFS', 'WFP', 'UNI', 'SPT', 'F4', 'F3', 'F2', 'F1']
+plt.setp(axes, xticks=[y+1 for y in range(len(all_data))], xticklabels=['FCFS', 'WFP', 'UNI', 'SPT', 'F4', 'F3', 'F2', 'F1'])
 
 plt.tick_params(axis='both', which='major', labelsize=45)
 plt.tick_params(axis='both', which='minor', labelsize=45)

@@ -31,7 +31,7 @@ tasks_queue_submit = []
 SECONDS_IN_A_DAY = 86400
 
 SIM_NUM_DAYS = 15
-NUM_EXPERIMENTS = 10
+NUM_EXPERIMENTS = 64
 
 slow_sjf = []
 slow_fcfs = []
@@ -158,14 +158,44 @@ all_medians = []
 
 axes = plt.axes()
 
-# plot violin plot
-#plt.violinplot(all_data,
-#                   showmeans=False,
-#                   showmedians=True,points=10)
-#axes[0].set_title('violin plot')
+new_all_data = np.array(all_data)
+
+OUT_POLICIES = 8
+MAX_OUT = [3,2,0,0,0,0,0,0]
+
+outliers = np.zeros((OUT_POLICIES,max(MAX_OUT)))
 
 xticks=[y+1 for y in range(len(all_data))]
-plt.plot(xticks, all_data, 'o', color='darkorange')
+
+for i in range(0,OUT_POLICIES):
+  temp = new_all_data[i,:]
+  for j in range(0,MAX_OUT[i]):
+    _max = np.max(temp)
+    outliers[i,j] = _max
+    temp = np.delete(temp,np.argmax(temp)) 
+  plt.plot(xticks[i], np.reshape(temp, (1,len(temp))), 'o', color='darkorange')
+
+
+plt.ylim((0,200))
+
+xoffset=[0.32,0.32,0.32,0.32]
+ylow=[167,175,130,130]
+
+for i in range(0,OUT_POLICIES):
+  output = ''
+  if MAX_OUT[i] != 0:
+    for j in range(0,MAX_OUT[i]):
+      if j == MAX_OUT[i] - 1:
+        output = output+'%.1f' % (outliers[i,j])
+      else:
+        output = output+'%.1f' % (outliers[i,j])+'\n'
+  #  continue
+  #output=''
+  #if i == 3 or i == 1:
+  #  output = '%.1f' % (outliers[i,0])  
+    plt.annotate(output, xy=(xticks[i], 200), xytext=(xticks[i]-xoffset[i], ylow[i]),
+            arrowprops=dict(facecolor='black', shrink=0.05),fontsize=25)
+
 for p in all_data:
   all_medians.append(np.median(p))
 
@@ -177,13 +207,12 @@ plt.boxplot(all_data, showfliers=False)
 #for ax in axes:
 axes.yaxis.grid(True)
 axes.set_xticks([y+1 for y in range(len(all_data))])
-axes.set_xlabel('Scheduling Policies', fontsize=45)
-axes.set_ylabel('Average Bounded Slowdown',  fontsize=45)
+#axes.set_xlabel('Scheduling Policies', fontsize=45)
+#axes.set_ylabel('Average Bounded Slowdown',  fontsize=45)
 
-xticklabels=['FCFS', 'WFP', 'UNI', 'SPT', 'F4', 'F3', 'F2', 'F1']
 # add x-tick labels
-plt.setp(axes, xticks=[y+1 for y in range(len(all_data))],
-         xticklabels=['FCFS', 'WFP', 'UNI', 'SPT', 'F4', 'F3', 'F2', 'F1'])
+xticklabels=['FCFS', 'WFP', 'UNI', 'SPT', 'F4', 'F3', 'F2', 'F1']
+plt.setp(axes, xticks=[y+1 for y in range(len(all_data))], xticklabels=['FCFS', 'WFP', 'UNI', 'SPT', 'F4', 'F3', 'F2', 'F1'])
 
 plt.tick_params(axis='both', which='major', labelsize=45)
 plt.tick_params(axis='both', which='minor', labelsize=45)
